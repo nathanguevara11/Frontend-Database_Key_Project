@@ -1,0 +1,54 @@
+body {
+    background: linear-gradient(180deg, rgba(136, 135, 135, 0.9), rgba(47, 46, 46, 0.9)),
+    rgba(79, 53, 53, 0.5);
+
+background-size: cover;
+min-height: 100%;
+/* background-repeat: no-repeat; */
+background-attachment: fixed;
+}
+.container {
+    
+    width: 100%;
+    height:400px; 
+    display: flex;
+    overflow-x: auto; 
+    justify-content: center;
+    align-items: center; 
+    gap: 10%;
+    flex-direction: row; 
+}
+#clocked_in {
+    display:none;
+}
+#clocked_out {
+    display:none;
+}
+
+#emp_id {
+    margin-left: 8px; 
+}
+.emp_form {
+    width: 400px; 
+    height: 300px;
+    background-color: hsla(30,30%,45%,0.6);
+    
+    border: 1px solid #fff;
+    text-align:center; 
+    display: flex; 
+    justify-content: center; 
+    flex-direction: column;
+    box-shadow: 0px 0px 20px 20px rgba(0,0,10, 0.3); 
+}
+.b-stuff {
+    background-color: hsla(30,30%,45%,0.6);
+    border: 1px solid #fff;
+    width: 400px; 
+    height: 300px;
+    display: none; 
+    align-items:center;
+    justify-content: center; 
+    flex-direction: column;
+
+    box-shadow: 0px 0px 20px 20px rgba(0,0,10, 0.3); 
+}
