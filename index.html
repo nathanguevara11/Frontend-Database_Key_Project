@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>key system</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <!-- <form action="search_id" method = "POST">
+            select
+            <label for = "emp_id">What is your emplyoye id?</label>
+            <input type = "text" id = "emp_id" name="emp_id">
+        </form> -->
+        <div class="container">
+        <div class="emp_form">
+        <label for="emp-id">Select your employee id:
+        <select id = "emp_id" name = "emp_id">
+            <option value = "">Not an employee</option>
+        </select>
+        <br><br>
+        </label>
+        </div>
+        <!-- <button class = "emp_submit "type = Submit>Confirm</button>     -->
+        <div class="b-stuff">
+            <div class="buttons-cico">
+            <select id = "key_id" name = "key_id">
+                <option value = "">Not a key</option>
+            </select>
+        <button id = "check_in_key">Click here to check key in!</button>
+        <button id = "check_out_key">Click here to check key out!</button>
+         </div>
+
+        <div id ="checked_in_message" style= "display:none;"></div>
+        <div id ="checked_in_message_2" style= "display:none;"></div>
+        <div id ="checked_out_message" style= "display:none;"></div>
+        <div id ="checked_out_message_2" style= "display:none;"></div>
+        </div>
+    </div>
+    <div id = 'key_status_list_container' style = "display:none;">
+        <ul id = 'key_status_list'></ul>
+    </div>
+        <script src = "logic.js"></script>
+        <!-- <script src="{{ url_for('static', filename='logic.js'"></script> this is for flask, java doesnt need this -->
+    </body>
+</html>
