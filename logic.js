@@ -176,7 +176,7 @@ function resetPage() {
 
 emp_dropdown.addEventListener('change', async function(){
    try {
-        key_dropdown.innerHTML = ''; 
+        key_dropdown.innerHTML = "key-j"; 
         checked_in_mess.style.display = 'none';
         checked_in_mess.innerHTML = ``
         checked_out_mess.style.display = 'none';
@@ -197,11 +197,12 @@ emp_dropdown.addEventListener('change', async function(){
     } 
 });
 
-
+//key_dropdown.addEventListener("change, async function()
+// {stuff ill add later}")
 check_in_btn.addEventListener('click', async function() {
     const avaiableKeys = await loadAvailableKeys(); 
 
-    if (!avaiableKeys){
+    if (!avaiableKeys || !key_dropdown.value){
         return; 
     }
     if(document.getElementById('Confirm_Checkin_btn')){
