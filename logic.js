@@ -176,7 +176,7 @@ function resetPage() {
 
 emp_dropdown.addEventListener('change', async function(){
    try {
-        key_dropdown.innerHTML = "key-j"; 
+        key_dropdown.innerHTML = `<option value ="key-j">"key-j"</option>`;
         checked_in_mess.style.display = 'none';
         checked_in_mess.innerHTML = ``
         checked_out_mess.style.display = 'none';
