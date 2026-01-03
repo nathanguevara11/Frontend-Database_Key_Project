@@ -1,4 +1,5 @@
 const emp_dropdown = document.getElementById("emp_id");
+const building_dropdown = document.getElementById("building_id");
 const key_dropdown = document.getElementById("key_id");
 const check_in_btn = document.getElementById('check_in_key');
 const check_out_btn = document.getElementById('check_out_key');
@@ -63,6 +64,36 @@ async function KeyInfo(){
     }
 }
 
+async function loadAvailableBuildings(){
+
+    const building_result = await fetch('/available_buildings', {
+                method: "POST", 
+                headers: {'Content-Type': 'application/json'}, 
+                body: JSON.stringify({emp_id: emp_dropdown.value})
+            }); 
+    building_dropdown.style.display = "inline-block";       
+    const building_data = await building_result.json(); 
+
+    if(!building_data.success){
+            alert(building_data.message);
+            return false; 
+        }
+        else if(building_data.buildings.length === 0){
+            alert("No buildings in database available");
+            return false; 
+        }
+        else{
+            building_data.buildings.forEach((building)=> {
+                const option = document.createElement('option');
+                option.value = building; 
+                option.textContent =building; 
+                key_dropdown.appendChild(option);
+            })
+        } 
+        return true; 
+}
+    
+
 async function loadAvailableKeys(){
      const key_result = await fetch('/available_keys', {
                 method: "POST", 
@@ -77,7 +108,7 @@ async function loadAvailableKeys(){
             return false; 
         }
         else if(key_data.keys.length === 0){
-            alert("No keys in database vailable");
+            alert("No keys in database available");
             return false; 
         }
         else{
@@ -117,12 +148,54 @@ async function loadCheckedOutKeys(){
         } 
 }
 
+async function confirmBuilding(){
+    let emp_id = emp_dropdown.value; 
+    let building_id = building_dropdown.value; 
+
+    if (!emp_id || !building_id ){
+        alert("Please check employee or building.");
+        return;  
+    }
+
+    check_in_btn.style.display = 'none';
+    emp_dropdown.value = ''; 
+
+    let check_in_time = new Date().toISOString();
+    console.log(check_in_time)
+    try { 
+        const result = await fetch('/check_in_keys', {
+            method: "POST", 
+            headers: {'Content-Type': 'application/json'}, 
+            body: JSON.stringify({emp_id: emp_id, building_id: building_id})
+        }); 
+
+        const data = await result.json(); 
+        
+        if(!data.success){
+            alert(data.message);
+            return; 
+        }
+        else{
+            checked_in_mess.style.display = 'inline-block';
+            checked_in_mess.innerHTML = `${emp_id} has now checked in building ${building_id} at ${check_in_time}!`
+            checked_in_mess_2.style.display = 'inline-block';
+            checked_in_mess_2.innerHTML = `<p>${data.message}</p>`;
+        }
+        KeyInfo(); 
+        setTimeout(resetPage, 3000);
+    }
+    catch(err){
+        console.error(err);
+    } 
+}
+
 async function confirmCheckin(){
     let emp_id = emp_dropdown.value; 
+    let building_id = building_dropdown; 
     let key_id = key_dropdown.value; 
 
-    if (!emp_id || !key_id){
-        alert("Please check in a key or employee.");
+    if (!emp_id || !building_id || !key_id){
+        alert("Please check in a key or employee or building.");
         return;  
     }
 
@@ -160,9 +233,10 @@ async function confirmCheckin(){
 
 
 function resetPage() {
-    emp_dropdown.value = ''; 
+    emp_dropdown.value = '';
+    building_dropdown.innerHTML = '';
     key_dropdown.innerHTML = ''; 
-
+     
     box2.style.display = 'none';
 
     check_in_btn.style.display = 'none';
@@ -176,7 +250,7 @@ function resetPage() {
 
 emp_dropdown.addEventListener('change', async function(){
    try {
-        key_dropdown.innerHTML = `<option value ="key-j">"key-j"</option>`;
+        key_dropdown.innerHTML = ``;
         checked_in_mess.style.display = 'none';
         checked_in_mess.innerHTML = ``
         checked_out_mess.style.display = 'none';
@@ -197,21 +271,53 @@ emp_dropdown.addEventListener('change', async function(){
     } 
 });
 
-//key_dropdown.addEventListener("change, async function()
-// {stuff ill add later}")
+building_dropdown.addEventListener("change", async function () {
+    if(document.getElementById('Confirm_building_btn')){
+        alert("Please confirm building.");
+        return; 
+    }
+    const confirm_building_btn = document.createElement('button');
+    confirm_building_btn.id = "Confirm_building_btn"
+    confirm_building_btn.textContent = 'Confirm building';
+    box2.appendChild(confirm_building_btn);
+
+    confirm_building_btn.addEventListener('click', async () =>{
+        try { 
+            await confirmbuilding()
+        }
+        catch(err){
+            console.log(err); 
+        }
+        
+        confirm_building_btn.remove();
+    });
+    // const building_id = building_dropdown.value; 
+    // const result = await fetch('/check_in_keys', {
+    //         method: "POST", 
+    //         headers: {'Content-Type': 'application/json'}, 
+    //         body: JSON.stringify({emp_id: emp_id, building_id: building_id})
+    //     }); 
+});
+
+key_dropdown.addEventListener("change", async function()
+ {
+    const keys_array = [...document.getElementById("key_id").options].filter(option => option.selected && option.value).map(selected => selected.value);
+ }); 
 check_in_btn.addEventListener('click', async function() {
+
+    const avalBuilding = await loadAvailableBuildings(); 
     const avaiableKeys = await loadAvailableKeys(); 
 
     if (!avaiableKeys || !key_dropdown.value){
         return; 
     }
     if(document.getElementById('Confirm_Checkin_btn')){
-        alert("Please confirm Check-in key.");
+        alert("Please confirm Check-in keys.");
         return; 
     }
     const confirm_checkin_btn = document.createElement('button');
     confirm_checkin_btn.id = "Confirm_Checkin_btn"
-    confirm_checkin_btn.textContent = 'Confirm Key Check-in';
+    confirm_checkin_btn.textContent = 'Confirm Keys Check-in';
     box2.appendChild(confirm_checkin_btn);
 
     confirm_checkin_btn.addEventListener('click', async () =>{

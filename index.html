@@ -26,19 +26,22 @@
         <!-- <button class = "emp_submit "type = Submit>Confirm</button>     -->
         <div class="b-stuff">
             <div class="buttons-cico">
-            <select id = "key_id" name = "key_id">
-                <option value = "">Not a key</option>
-                <option value = "J">J</option>
-                <option value = "C">C</option>
+                <button id = "check_in_key">Click here to check key in!</button>
+                <button id = "check_out_key">Click here to check key out!</button>
+            </div>
+            
+            <select id = "building_id" name = "building_id">
+                <option value = "">Not a building</option>
             </select>
-        <button id = "check_in_key">Click here to check key in!</button>
-        <button id = "check_out_key">Click here to check key out!</button>
-         </div>
 
-        <div id ="checked_in_message" style= "display:none;"></div>
-        <div id ="checked_in_message_2" style= "display:none;"></div>
-        <div id ="checked_out_message" style= "display:none;"></div>
-        <div id ="checked_out_message_2" style= "display:none;"></div>
+            <select id = "key_id" name = "key_id" multiple>
+                <option value = "">Not a key</option>
+            </select>
+
+            <div id ="checked_in_message" style= "display:none;"></div>
+            <div id ="checked_in_message_2" style= "display:none;"></div>
+            <div id ="checked_out_message" style= "display:none;"></div>
+            <div id ="checked_out_message_2" style= "display:none;"></div>
         </div>
     </div>
     <div id = 'key_status_list_container' style = "display:none;">
