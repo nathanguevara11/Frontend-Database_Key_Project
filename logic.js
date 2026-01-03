@@ -63,7 +63,7 @@ async function KeyInfo(){
 
     }
 }
-
+//dfgd
 async function loadAvailableBuildings(){
 
     const building_result = await fetch('/available_buildings', {
