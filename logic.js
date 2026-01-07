@@ -329,8 +329,11 @@ building_dropdown.addEventListener("change", async function () {
 //  }); 
 check_in_btn.addEventListener('click', async function() {
 
-    const avalBuilding = await loadAvailableBuildings(); 
     
+    const avalBuilding = await loadAvailableBuildings(); 
+    if(avalBuilding){
+        building_dropdown.style.display = "inline-block"
+    }   
     const avaiableKeys = await loadAvailableKeys(); 
 
     if (!avaiableKeys || !key_dropdown.value || !avalBuilding){
