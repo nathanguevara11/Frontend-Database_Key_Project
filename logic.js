@@ -63,38 +63,45 @@ async function KeyInfo(){
 
     }
 }
-//dfgd
+
+
 async function loadAvailableBuildings(){
+    try{
+        const building_result = await fetch('/available_buildings', {
+                    method: "POST", 
+                    headers: {'Content-Type': 'application/json'}, 
+                    body: JSON.stringify({emp_id: emp_dropdown.value})
+                }); 
+        building_dropdown.style.display = "inline-block";       
+        const building_data = await building_result.json(); 
 
-    const building_result = await fetch('/available_buildings', {
-                method: "POST", 
-                headers: {'Content-Type': 'application/json'}, 
-                body: JSON.stringify({emp_id: emp_dropdown.value})
-            }); 
-    building_dropdown.style.display = "inline-block";       
-    const building_data = await building_result.json(); 
-
-    if(!building_data.success){
-            alert(building_data.message);
-            return false; 
-        }
-        else if(building_data.buildings.length === 0){
-            alert("No buildings in database available");
-            return false; 
-        }
-        else{
-            building_data.buildings.forEach((building)=> {
-                const option = document.createElement('option');
-                option.value = building; 
-                option.textContent =building; 
-                key_dropdown.appendChild(option);
-            })
-        } 
-        return true; 
+        if(!building_data.success){
+                alert(building_data.message);
+                return false; 
+            }
+            else if(building_data.buildings.length === 0){
+                alert("No buildings in database available");
+                return false; 
+            }
+            else{
+                building_data.buildings.forEach((building)=> {
+                    const option = document.createElement('option');
+                    option.value = building; 
+                    option.textContent =building; 
+                    key_dropdown.appendChild(option);
+                })
+            } 
+            return true; 
+    }
+    catch(err){
+        console.log(err);
+        return false; 
+    }
 }
     
 
 async function loadAvailableKeys(){
+    try{
      const key_result = await fetch('/available_keys', {
                 method: "POST", 
                 headers: {'Content-Type': 'application/json'}, 
@@ -119,33 +126,44 @@ async function loadAvailableKeys(){
                 key_dropdown.appendChild(option);
             })
         } 
-        return true; 
+        return true;
+    }
+    catch(err){
+        console.log(err);
+        return false; 
+    }
 }
 
 async function loadCheckedOutKeys(){
-    const key_result = await fetch('/returnable_keys_for employee', {
-                method: "POST", 
-                headers: {'Content-Type': 'application/json'}, 
-                body: JSON.stringify({emp_id: emp_dropdown.value})
-            }); 
+    try{
+        const key_result = await fetch('/returnable_keys_for employee', {
+                    method: "POST", 
+                    headers: {'Content-Type': 'application/json'}, 
+                    body: JSON.stringify({emp_id: emp_dropdown.value})
+                }); 
 
-        const key_data = await key_result.json(); 
-        
-        if(!key_data.success){
-            alert(key_data.message);
-            return; 
-        }
-        else if (data.keys.length === 0){
-            check_out_btn.disabled = true; 
-        }
-        else{
-            key_data.keys.forEach((key)=> {
-                const option = document.createElement('option');
-                option.value = key; 
-                option.textContent =key; 
-                key_dropdown.appendChild(option);
-            })
-        } 
+            const key_data = await key_result.json(); 
+            
+            if(!key_data.success){
+                alert(key_data.message);
+                return; 
+            }
+            else if (data.keys.length === 0){
+                check_out_btn.disabled = true; 
+            }
+            else{
+                key_data.keys.forEach((key)=> {
+                    const option = document.createElement('option');
+                    option.value = key; 
+                    option.textContent =key; 
+                    key_dropdown.appendChild(option);
+                })
+            }
+    }
+    catch(err){
+        console.log(err);
+        return false; 
+    }
 }
 
 async function confirmBuilding(){
@@ -272,24 +290,30 @@ emp_dropdown.addEventListener('change', async function(){
 });
 
 building_dropdown.addEventListener("change", async function () {
-    if(document.getElementById('Confirm_building_btn')){
-        alert("Please confirm building.");
-        return; 
-    }
-    const confirm_building_btn = document.createElement('button');
-    confirm_building_btn.id = "Confirm_building_btn"
-    confirm_building_btn.textContent = 'Confirm building';
-    box2.appendChild(confirm_building_btn);
-
-    confirm_building_btn.addEventListener('click', async () =>{
-        try { 
-            await confirmbuilding()
+    try{
+        if(document.getElementById('Confirm_building_btn')){
+            alert("Please confirm building.");
+            return; 
         }
+        const confirm_building_btn = document.createElement('button');
+        confirm_building_btn.id = "Confirm_building_btn"
+        confirm_building_btn.textContent = 'Confirm building';
+        box2.appendChild(confirm_building_btn);
+
+        confirm_building_btn.addEventListener('click', async () =>{
+            try { 
+                await confirmbuilding()
+            }
+            catch(err){
+                console.log(err); 
+            }
+            
+            confirm_building_btn.remove();
+        });  
+    }
         catch(err){
             console.log(err); 
         }
-        
-        confirm_building_btn.remove();
     });
     // const building_id = building_dropdown.value; 
     // const result = await fetch('/check_in_keys', {
@@ -297,18 +321,19 @@ building_dropdown.addEventListener("change", async function () {
     //         headers: {'Content-Type': 'application/json'}, 
     //         body: JSON.stringify({emp_id: emp_id, building_id: building_id})
     //     }); 
-});
+//});
 
-key_dropdown.addEventListener("change", async function()
- {
-    const keys_array = [...document.getElementById("key_id").options].filter(option => option.selected && option.value).map(selected => selected.value);
- }); 
+// key_dropdown.addEventListener("change", async function()
+//  {
+//     const keys_array = [...document.getElementById("key_id").options].filter(option => option.selected && option.value).map(selected => selected.value);
+//  }); 
 check_in_btn.addEventListener('click', async function() {
 
     const avalBuilding = await loadAvailableBuildings(); 
+    
     const avaiableKeys = await loadAvailableKeys(); 
 
-    if (!avaiableKeys || !key_dropdown.value){
+    if (!avaiableKeys || !key_dropdown.value || !avalBuilding){
         return; 
     }
     if(document.getElementById('Confirm_Checkin_btn')){
