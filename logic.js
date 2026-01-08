@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         const employees = await result.json(); 
         emp_dropdown.innerHTML = ''; 
         if (employees.length === 0){
-            emp_dropdown.innerHTML = '<li>No employees available for check out</li>'
+            emp_dropdown.innerHTML = '<option value ="">No employees available</option>'
             return; 
         }
         else{
@@ -78,9 +78,7 @@ async function loadAvailableBuildings(){
                     method: "POST", 
                     headers: {'Content-Type': 'application/json'}, 
                     body: JSON.stringify({emp_id: emp_dropdown.value})
-                }); 
-        building_dropdown.innerHTML = `<option value="">Select a building</option>`;
-        building_dropdown.style.display = "inline-block";       
+                });        
         const building_data = await building_result.json(); 
 
         if(!building_data.success){
@@ -224,15 +222,12 @@ async function confirmBuilding(){
 async function confirmCheckin(){
     let emp_id = emp_dropdown.value; 
     let building_id = building_dropdown.value; 
-    let key_id = key_dropdown.value; 
+    const keys_array = [...document.getElementById("key_id").options].filter(option => option.selected && option.value).map(selected => selected.value); 
 
-    if (!emp_id || !building_id || !key_id){
+    if (!emp_id || !building_id || keys_array.length === 0){
         alert("Please check in a key or employee or building.");
         return;  
     }
-
-    check_in_btn.style.display = 'none';
-    emp_dropdown.value = ''; 
 
     let check_in_time = new Date().toISOString();
     console.log(check_in_time)
@@ -240,7 +235,7 @@ async function confirmCheckin(){
         const result = await fetch('/check_in_keys', {
             method: "POST", 
             headers: {'Content-Type': 'application/json'}, 
-            body: JSON.stringify({emp_id: emp_id, building_id: building_id, key_id: key_id, check_in_time: check_in_time})
+            body: JSON.stringify({emp_id: emp_id, building_id: building_id, keys_array: keys_array, check_in_time: check_in_time})
         }); 
 
         const data = await result.json(); 
@@ -251,12 +246,10 @@ async function confirmCheckin(){
         }
         else{
             checked_in_mess.style.display = 'inline-block';
-            checked_in_mess.innerHTML = `${emp_id} has now checked in key ${key_id} from building ${building_id} at ${check_in_time}!`
+            checked_in_mess.innerHTML = `${emp_id} has now checked in key from building ${building_id} at ${check_in_time}!`
             checked_in_mess_2.style.display = 'inline-block';
             checked_in_mess_2.innerHTML = `<p>${data.message}</p>`;
         }
-        KeyInfo(); 
-        setTimeout(resetPage, 3000);
     }
     catch(err){
         console.error(err);
@@ -309,6 +302,19 @@ emp_dropdown.addEventListener('change', async function(){
 });
 //-----------------------------------------------------------------
 
+//user chooses this or check otu key button to start the process------------------------
+check_in_btn.addEventListener('click', async function() {
+    building_dropdown.innerHTML = `<option value="">Select a building</option>`;
+    building_dropdown.style.display = "inline-block";
+    const avalBuilding = await loadAvailableBuildings(); 
+     
+    if (avalBuilding){
+        check_in_btn.hidden = true; 
+        check_out_btn.hidden = true; 
+    }  
+    
+});
+//------------------------------------------------------------------
 
 //Event listener for what building the user wants keys selection from ----------------------------------------------------
 building_dropdown.addEventListener("change", async function () {
@@ -335,17 +341,11 @@ confirm_building_btn.addEventListener('click', async () =>{
 //--------------------------------------------------------------------
 
 
-//sends the builing chosen by thte user to the java server------------------------
-check_in_btn.addEventListener('click', async function() {
-    building_dropdown.style.display = "inline-block"; 
-    const avalBuilding = await loadAvailableBuildings(); 
-    if (!key_dropdown.value || !avalBuilding){
-        return; 
-    }  
+//confirm the keys the user wants to take-----------------------------
+confirm_key_btn.addEventListener("click", async function (){
+    const final_confirmation = await confirmCheckin();
+    setTimeout(resetPage, 3000); 
 });
-//------------------------------------------------------------------
-
-
 //sends the keys checked out by the user------------------------------
 check_out_btn.addEventListener('click', async function() {
     await loadCheckedOutKeys();
