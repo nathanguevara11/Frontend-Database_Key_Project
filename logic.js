@@ -298,11 +298,15 @@ function resetPage() {
     emp_dropdown.value = '';
     building_dropdown.innerHTML = '';
     key_dropdown.innerHTML = ''; 
-     
+    
     box2.style.display = 'none';
-
     check_in_btn.style.display = 'none';
     check_out_btn.style.display = 'none';
+
+    key_dropdown.style.display = "none"; 
+    building_dropdown.style.display = "none"; 
+    confirm_key_btn.style.display = "none";
+    confirm_building_btn.style.display = "none";
 
     checked_in_mess.style.display = 'none';
     checked_in_mess_2.style.display = 'none';
