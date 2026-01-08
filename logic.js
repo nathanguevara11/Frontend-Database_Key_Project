@@ -307,10 +307,11 @@ check_in_btn.addEventListener('click', async function() {
     building_dropdown.innerHTML = `<option value="">Select a building</option>`;
     building_dropdown.style.display = "inline-block";
     const avalBuilding = await loadAvailableBuildings(); 
-     
+    
+    check_in_btn.style.display = 'none'; 
+    check_out_btn.style.display = 'none';
     if (avalBuilding){
-        check_in_btn.style.display = 'none'; 
-        check_out_btn.style.display = 'none'; 
+        
     }  
 });
 //------------------------------------------------------------------
