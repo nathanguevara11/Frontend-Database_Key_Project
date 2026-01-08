@@ -311,6 +311,7 @@ function resetPage() {
     building_dropdown.style.display = "none"; 
     confirm_key_btn.style.display = "none";
     confirm_building_btn.style.display = "none";
+    confirm_building_btn.hidden = false; 
 
     checked_in_mess.style.display = 'none';
     checked_in_mess_2.style.display = 'none';
