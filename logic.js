@@ -298,6 +298,7 @@ function resetPage() {
     emp_dropdown.value = '';
     building_dropdown.innerHTML = '';
     building_dropdown.value = ''; 
+    building_dropdown.disabled = false; 
     key_dropdown.innerHTML = '';
     [...key_dropdown.options].forEach(choice => choice.selected = false); 
 
