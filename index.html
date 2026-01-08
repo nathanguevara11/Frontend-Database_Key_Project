@@ -14,7 +14,6 @@
         </form> -->
         <div class="container">
             <div class="emp_form">
-                <form action="employee" method = "POST">
                     <label for="emp_id">Select your employee id:
                     <select id = "emp_id" name = "emp_id">
                         <option value = "">Not an employee</option>
@@ -23,7 +22,6 @@
                     </select>
                     <br><br>
                     </label>
-                </form>
             </div>
             <!-- <button class = "emp_submit "type = Submit>Confirm</button>     -->
             <div class="b-stuff">
@@ -32,19 +30,15 @@
                     <button id = "check_out_key">Click here to check key out!</button>
                 </div>
                 <div id="building_form">
-                    <form action="building" method = "POST">
                         <select id = "building_id" name = "building_id">
                         </select>
                     <button id="confirm_building_btn" hidden>Confirm Building</button>
-                    </form>
                 </div>
 
                 <div id="key_form">
-                    <form action="key" method="POST">
                         <select id = "key_id" name = "key_id" multiple>
                         </select>
                     <button id="confirm_checkin_btn" hidden>Confirm keys</button>
-                    </form>
                 </div>
 
                 <div id ="checked_in_message" style= "display:none;"></div>
