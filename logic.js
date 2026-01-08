@@ -361,7 +361,6 @@ building_dropdown.addEventListener("change", async function () {
         }
 });
 
-
 //sends the builing chosen by thte user to the java server-------------------------------
 confirm_building_btn.addEventListener('click', async () =>{
             try { 
@@ -371,12 +370,15 @@ confirm_building_btn.addEventListener('click', async () =>{
                 console.log(err); 
             }
             
-            building_dropdown.style.display = 'none'
+            // building_dropdown.style.display = 'none'; 
             confirm_building_btn.style.display = 'none'; 
 });
 //--------------------------------------------------------------------
 
-
+key_dropdown.addEventListener("change", async function()
+{
+    confirm_key_btn.style.display = "inline-block"; 
+}); 
 //confirm the keys the user wants to take-----------------------------
 confirm_key_btn.addEventListener("click", async function (){
     const final_confirmation = await confirmCheckin();
