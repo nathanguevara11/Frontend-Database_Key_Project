@@ -57,5 +57,7 @@ background-attachment: fixed;
     display: none; 
 } 
 #key_id{
-    display: none; 
+    display: none;
+    height: 400px; 
+    width: 400px;  
 } 
