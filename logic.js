@@ -309,10 +309,9 @@ check_in_btn.addEventListener('click', async function() {
     const avalBuilding = await loadAvailableBuildings(); 
      
     if (avalBuilding){
-        check_in_btn.hidden = true; 
-        check_out_btn.hidden = true; 
+        check_in_btn.style.display = 'none'; 
+        check_out_btn.style.display = 'none'; 
     }  
-    
 });
 //------------------------------------------------------------------
 
