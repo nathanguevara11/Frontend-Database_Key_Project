@@ -371,7 +371,8 @@ confirm_building_btn.addEventListener('click', async () =>{
                 console.log(err); 
             }
             
-            confirm_building_btn.hidden = true; 
+            building_dropdown.style.display = 'none'
+            confirm_building_btn.style.display = 'none'; 
 });
 //--------------------------------------------------------------------
 
