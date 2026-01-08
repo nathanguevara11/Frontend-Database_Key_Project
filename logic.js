@@ -3,6 +3,8 @@ const building_dropdown = document.getElementById("building_id");
 const key_dropdown = document.getElementById("key_id");
 const check_in_btn = document.getElementById('check_in_key');
 const check_out_btn = document.getElementById('check_out_key');
+const confirm_building_btn = document.getElementById('confirm_building_btn');
+const confirm_key_btn = document.getElementById('confirm_checkin_btn');
 const checked_in_mess = document.getElementById('checked_in_message');
 const checked_out_mess = document.getElementById('checked_out_message');
 const checked_in_mess_2 = document.getElementById('checked_in_message_2');
@@ -11,6 +13,7 @@ const box2 = document.querySelector(".b-stuff");
 const key_status_list_conatiner = document.getElementById('key_status_list_container');
 
 
+//loads employees from database ----------------------------------------------------
 document.addEventListener('DOMContentLoaded', async function () {
     try{
         const result = await fetch('/get_the_employee_ids_from_the_database');
@@ -35,8 +38,10 @@ document.addEventListener('DOMContentLoaded', async function () {
         console.log(err);
     }
 });
+//-----------------------------------------------------------------------
 
 
+//load information about keys ----------------------------------------------------
 async function KeyInfo(){
     try {
         const result = await fetch('/database_key_status'); 
@@ -63,8 +68,10 @@ async function KeyInfo(){
 
     }
 }
+//--------------------------------------------------------------------
 
 
+//loads buildings from the database ----------------------------------------------------
 async function loadAvailableBuildings(){
     try{
         const building_result = await fetch('/available_buildings', {
@@ -88,9 +95,9 @@ async function loadAvailableBuildings(){
                     const option = document.createElement('option');
                     option.value = building; 
                     option.textContent =building; 
-                    key_dropdown.appendChild(option);
+                    building_dropdown.appendChild(option);
                 })
-            } 
+            }
             return true; 
     }
     catch(err){
@@ -98,14 +105,20 @@ async function loadAvailableBuildings(){
         return false; 
     }
 }
-    
+//---------------------------------------------------------------------  
 
+
+//loads keys from database ----------------------------------------------------
 async function loadAvailableKeys(){
     try{
-     const key_result = await fetch('/available_keys', {
+
+        let emp_id = emp_dropdown.value; 
+        let building_id = building_dropdown.value;
+
+        const key_result = await fetch('/available_keys', {
                 method: "POST", 
                 headers: {'Content-Type': 'application/json'}, 
-                body: JSON.stringify({emp_id: emp_dropdown.value})
+                body: JSON.stringify({emp_id: emp_id, building_id: building_id })
             }); 
 
         const key_data = await key_result.json(); 
@@ -133,7 +146,10 @@ async function loadAvailableKeys(){
         return false; 
     }
 }
+//---------------------------------------------------------------------
 
+
+//loads keys already checked out in database ----------------------------------------------------
 async function loadCheckedOutKeys(){
     try{
         const key_result = await fetch('/returnable_keys_for employee', {
@@ -165,7 +181,10 @@ async function loadCheckedOutKeys(){
         return false; 
     }
 }
+//----------------------------------------------------------------------
 
+
+//confirms the building the user chooses to take keys from ----------------------------------------------------
 async function confirmBuilding(){
     let emp_id = emp_dropdown.value; 
     let building_id = building_dropdown.value; 
@@ -176,7 +195,7 @@ async function confirmBuilding(){
     }
 
     check_in_btn.style.display = 'none';
-    emp_dropdown.value = ''; 
+    // emp_dropdown.value = ''; 
 
     let check_in_time = new Date().toISOString();
     console.log(check_in_time)
@@ -199,17 +218,18 @@ async function confirmBuilding(){
             checked_in_mess_2.style.display = 'inline-block';
             checked_in_mess_2.innerHTML = `<p>${data.message}</p>`;
         }
-        KeyInfo(); 
-        setTimeout(resetPage, 3000);
     }
     catch(err){
         console.error(err);
     } 
 }
+//----------------------------------------------------------------------
 
+
+//confirms the keys the user wants to take ----------------------------------------------------
 async function confirmCheckin(){
     let emp_id = emp_dropdown.value; 
-    let building_id = building_dropdown; 
+    let building_id = building_dropdown.value; 
     let key_id = key_dropdown.value; 
 
     if (!emp_id || !building_id || !key_id){
@@ -226,7 +246,7 @@ async function confirmCheckin(){
         const result = await fetch('/check_in_keys', {
             method: "POST", 
             headers: {'Content-Type': 'application/json'}, 
-            body: JSON.stringify({emp_id: emp_id, key_id: key_id, check_in_time: check_in_time})
+            body: JSON.stringify({emp_id: emp_id, building_id: building_id, key_id: key_id, check_in_time: check_in_time})
         }); 
 
         const data = await result.json(); 
@@ -237,7 +257,7 @@ async function confirmCheckin(){
         }
         else{
             checked_in_mess.style.display = 'inline-block';
-            checked_in_mess.innerHTML = `${emp_id} has now checked in key ${key_id} at ${check_in_time}!`
+            checked_in_mess.innerHTML = `${emp_id} has now checked in key ${key_id} from building ${building_id} at ${check_in_time}!`
             checked_in_mess_2.style.display = 'inline-block';
             checked_in_mess_2.innerHTML = `<p>${data.message}</p>`;
         }
@@ -248,8 +268,10 @@ async function confirmCheckin(){
         console.error(err);
     } 
 }
+//----------------------------------------------------------------------
 
 
+//resets the page layout ----------------------------------------------------
 function resetPage() {
     emp_dropdown.value = '';
     building_dropdown.innerHTML = '';
@@ -265,7 +287,10 @@ function resetPage() {
     checked_out_mess.style.display = 'none';
     checked_out_mess_2.style.display = 'none';
 }
+//--------------------------------------------------------------------
 
+
+//Event listener for which employee is getting keys----------------------------------------------------
 emp_dropdown.addEventListener('change', async function(){
    try {
         key_dropdown.innerHTML = ``;
@@ -288,77 +313,46 @@ emp_dropdown.addEventListener('change', async function(){
         console.error(err);
     } 
 });
+//-----------------------------------------------------------------
 
+
+//Event listener for what building the user wants keys selection from ----------------------------------------------------
 building_dropdown.addEventListener("change", async function () {
     try{
-        if(document.getElementById('Confirm_building_btn')){
-            alert("Please confirm building.");
-            return; 
+        confirm_building_btn.hidden = false; 
+    }
+        catch(err){
+            console.log(err); 
         }
-        const confirm_building_btn = document.createElement('button');
-        confirm_building_btn.id = "Confirm_building_btn"
-        confirm_building_btn.textContent = 'Confirm building';
-        box2.appendChild(confirm_building_btn);
+});
 
-        confirm_building_btn.addEventListener('click', async () =>{
+
+//sends the builing chosen by thte user to the java server-------------------------------
+confirm_building_btn.addEventListener('click', async () =>{
             try { 
-                await confirmbuilding()
+                await confirmBuilding()
             }
             catch(err){
                 console.log(err); 
             }
             
-            confirm_building_btn.remove();
-        });  
-    }
-        catch(err){
-            console.log(err); 
-        }
-    });
-    // const building_id = building_dropdown.value; 
-    // const result = await fetch('/check_in_keys', {
-    //         method: "POST", 
-    //         headers: {'Content-Type': 'application/json'}, 
-    //         body: JSON.stringify({emp_id: emp_id, building_id: building_id})
-    //     }); 
-//});
+            confirm_building_btn.hidden = true; 
+});
+//--------------------------------------------------------------------
 
-// key_dropdown.addEventListener("change", async function()
-//  {
-//     const keys_array = [...document.getElementById("key_id").options].filter(option => option.selected && option.value).map(selected => selected.value);
-//  }); 
+
+//sends the builing chosen by thte user to the java server------------------------
 check_in_btn.addEventListener('click', async function() {
-
     building_dropdown.style.display = "inline-block"; 
     const avalBuilding = await loadAvailableBuildings(); 
-     
-    const avaiableKeys = await loadAvailableKeys(); 
-
-    if (!avaiableKeys || !key_dropdown.value || !avalBuilding){
+    if (!key_dropdown.value || !avalBuilding){
         return; 
-    }
-    if(document.getElementById('Confirm_Checkin_btn')){
-        alert("Please confirm Check-in keys.");
-        return; 
-    }
-    const confirm_checkin_btn = document.createElement('button');
-    confirm_checkin_btn.id = "Confirm_Checkin_btn"
-    confirm_checkin_btn.textContent = 'Confirm Keys Check-in';
-    box2.appendChild(confirm_checkin_btn);
-
-    confirm_checkin_btn.addEventListener('click', async () =>{
-        try { 
-            await confirmCheckin()
-        }
-        catch(err){
-            console.log(err); 
-        }
-        
-        confirm_checkin_btn.remove();
-    });        
+    }  
 });
+//------------------------------------------------------------------
 
 
+//sends the keys checked out by the user------------------------------
 check_out_btn.addEventListener('click', async function() {
     await loadCheckedOutKeys();
  
@@ -410,8 +404,24 @@ check_out_btn.addEventListener('click', async function() {
             console.log(error);
         }
         
-} );
+});
+//--------------------------------------------------------------------------
 
+
+//ARCHIVE OF REMOVED CHANGES--------------------------------------------------
+//
+    // const building_id = building_dropdown.value; 
+    // const result = await fetch('/check_in_keys', {
+    //         method: "POST", 
+    //         headers: {'Content-Type': 'application/json'}, 
+    //         body: JSON.stringify({emp_id: emp_id, building_id: building_id})
+    //     }); 
+//});
+
+// key_dropdown.addEventListener("change", async function()
+//  {
+//     const keys_array = [...document.getElementById("key_id").options].filter(option => option.selected && option.value).map(selected => selected.value);
+//  }); 
 
 // function refresh() 
 // {
