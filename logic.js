@@ -79,6 +79,7 @@ async function loadAvailableBuildings(){
                     headers: {'Content-Type': 'application/json'}, 
                     body: JSON.stringify({emp_id: emp_dropdown.value})
                 }); 
+        building_dropdown.innerHTML = `<option value="">Select a building</option>`;
         building_dropdown.style.display = "inline-block";       
         const building_data = await building_result.json(); 
 
@@ -164,7 +165,7 @@ async function loadCheckedOutKeys(){
                 alert(key_data.message);
                 return; 
             }
-            else if (data.keys.length === 0){
+            else if (key_data.keys.length === 0){
                 check_out_btn.disabled = true; 
             }
             else{
@@ -195,29 +196,22 @@ async function confirmBuilding(){
     }
 
     check_in_btn.style.display = 'none';
+    building_dropdown.disabled = true; 
+    confirm_building_btn.hidden = true; 
+
+    key_dropdown.innerHTML = `<option value="">Select a key</option>`;
+    key_dropdown.style.display = "inline-block";
     // emp_dropdown.value = ''; 
 
-    let check_in_time = new Date().toISOString();
-    console.log(check_in_time)
+    // let check_in_time = new Date().toISOString();
+    // console.log(check_in_time)
     try { 
-        const result = await fetch('/check_in_keys', {
-            method: "POST", 
-            headers: {'Content-Type': 'application/json'}, 
-            body: JSON.stringify({emp_id: emp_id, building_id: building_id})
-        }); 
 
-        const data = await result.json(); 
-        
-        if(!data.success){
-            alert(data.message);
+        const keyLoads = await loadAvailableKeys(); 
+        if (!keyLoads){
             return; 
-        }
-        else{
-            checked_in_mess.style.display = 'inline-block';
-            checked_in_mess.innerHTML = `${emp_id} has now checked in building ${building_id} at ${check_in_time}!`
-            checked_in_mess_2.style.display = 'inline-block';
-            checked_in_mess_2.innerHTML = `<p>${data.message}</p>`;
-        }
+        } 
+        confirm_key_btn.hidden = false; 
     }
     catch(err){
         console.error(err);
