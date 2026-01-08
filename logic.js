@@ -297,7 +297,10 @@ async function confirmCheckin(){
 function resetPage() {
     emp_dropdown.value = '';
     building_dropdown.innerHTML = '';
-    key_dropdown.innerHTML = ''; 
+    building_dropdown.value = ''; 
+    key_dropdown.innerHTML = '';
+    [...key_dropdown.options].forEach(choice => choice.selected = false); 
+
     
     box2.style.display = 'none';
     check_in_btn.style.display = 'none';
