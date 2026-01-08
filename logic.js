@@ -309,8 +309,8 @@ function resetPage() {
 
     key_dropdown.style.display = "none"; 
     building_dropdown.style.display = "none"; 
-    confirm_key_btn.style.display = "inline-block";
-    confirm_building_btn.style.display = "inline-block"
+    // confirm_key_btn.style.display = "inline-block";
+    // confirm_building_btn.style.display = "inline-block";
 
     checked_in_mess.style.display = 'none';
     checked_in_mess_2.style.display = 'none';
