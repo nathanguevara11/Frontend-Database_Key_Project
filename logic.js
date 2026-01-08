@@ -13,6 +13,41 @@ const box2 = document.querySelector(".b-stuff");
 const key_status_list_conatiner = document.getElementById('key_status_list_container');
 
 
+//debuggers off chatgpt--------------------------------------------------
+function initializeBuildingDropdown() {
+    building_dropdown.innerHTML = '';
+ 
+    // Placeholder option (empty value)
+    const placeholder = document.createElement('option');
+    placeholder.value = "";
+    placeholder.textContent = "Select your building";
+    building_dropdown.appendChild(placeholder);
+
+    // Default building option that will always be there
+    const defaultBuilding = document.createElement('option');
+    defaultBuilding.value = "Main Building";
+    defaultBuilding.textContent = "Main Building";
+    building_dropdown.appendChild(defaultBuilding);
+}
+function initializeKeyDropdown() {
+    key_dropdown.innerHTML = '';
+
+    // Placeholder option (empty value)
+    const placeholder = document.createElement('option');
+    placeholder.value = "";
+    placeholder.textContent = "Select a key";
+    placeholder.disabled = true;  // optional: prevents selecting placeholder again
+    placeholder.selected = true;  // shows this initially
+    key_dropdown.appendChild(placeholder);
+
+    // Default key that is always available
+    const defaultKey = document.createElement('option');
+    defaultKey.value = "Master Key";
+    defaultKey.textContent = "Master Key";
+    key_dropdown.appendChild(defaultKey);
+}
+//debuggers offf chatgpt----------------------------------------------------
+
 //loads employees from database ----------------------------------------------------
 document.addEventListener('DOMContentLoaded', async function () {
     try{
@@ -197,7 +232,7 @@ async function confirmBuilding(){
     building_dropdown.disabled = true; 
     confirm_building_btn.hidden = true; 
 
-    key_dropdown.innerHTML = `<option value="">Select a key</option>`;
+    initializeKeyDropdown(); 
     key_dropdown.style.display = "inline-block";
     // emp_dropdown.value = ''; 
 
@@ -304,14 +339,14 @@ emp_dropdown.addEventListener('change', async function(){
 
 //user chooses this or check otu key button to start the process------------------------
 check_in_btn.addEventListener('click', async function() {
-    building_dropdown.innerHTML = `<option value="">Select a building</option>`;
+    initializeBuildingDropdown(); 
     building_dropdown.style.display = "inline-block";
     const avalBuilding = await loadAvailableBuildings(); 
     
     check_in_btn.style.display = 'none'; 
     check_out_btn.style.display = 'none';
     if (avalBuilding){
-        
+
     }  
 });
 //------------------------------------------------------------------
