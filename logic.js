@@ -393,13 +393,13 @@ confirm_building_btn.addEventListener('click', async () =>{
             }
             
             // building_dropdown.style.display = 'none'; 
-            confirm_building_btn.style.display = 'none'; 
+            confirm_building_btn.hidden = true; 
 });
 //--------------------------------------------------------------------
 
 key_dropdown.addEventListener("change", async function()
 {
-    confirm_key_btn.style.display = "inline-block"; 
+    confirm_key_btn.hidden = false; 
 }); 
 //confirm the keys the user wants to take-----------------------------
 confirm_key_btn.addEventListener("click", async function (){
