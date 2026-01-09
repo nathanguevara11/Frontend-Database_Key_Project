@@ -299,8 +299,10 @@ function resetPage() {
     building_dropdown.innerHTML = '';
     building_dropdown.value = ''; 
     building_dropdown.disabled = false; 
+    
     key_dropdown.innerHTML = '';
     [...key_dropdown.options].forEach(choice => choice.selected = false); 
+    key_dropdown.selectedIndex = -1; 
 
     
     box2.style.display = 'none';
@@ -309,8 +311,7 @@ function resetPage() {
 
     key_dropdown.style.display = "none"; 
     building_dropdown.style.display = "none"; 
-    confirm_key_btn.style.display = "inline-block";
-    confirm_building_btn.style.display = "inline-block";
+    confirm_key_btn.style.display = "none";
     confirm_building_btn.hidden = true; 
 
     checked_in_mess.style.display = 'none';
@@ -362,6 +363,14 @@ check_in_btn.addEventListener('click', async function() {
 
 //Event listener for what building the user wants keys selection from ----------------------------------------------------
 building_dropdown.addEventListener("change", async function () {
+    try{
+        confirm_building_btn.hidden = false; 
+    }
+        catch(err){
+            console.log(err); 
+        }
+});
+building_dropdown.addEventListener("click", async function () {
     try{
         confirm_building_btn.hidden = false; 
     }
