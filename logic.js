@@ -199,7 +199,8 @@ async function loadCheckedOutKeys(){
                 return; 
             }
             else if (key_data.keys.length === 0){
-                check_out_btn.disabled = true; 
+                alert("No keys issued to this employee"); 
+                return; 
             }
             else{
                 key_data.keys.forEach((key)=> {
@@ -212,7 +213,6 @@ async function loadCheckedOutKeys(){
     }
     catch(err){
         console.log(err);
-        return false; 
     }
 }
 //----------------------------------------------------------------------
@@ -410,24 +410,9 @@ confirm_key_btn.addEventListener("click", async function (){
 check_out_btn.addEventListener('click', async function() {
     await loadCheckedOutKeys();
  
-    if(document.getElementById('Confirm_Checkout_btn')){
-        alert("Please confirm key.");
-        return; 
-    }
-    const confirm_checkout_btn = document.createElement('button');
-    confirm_checkout_btn.id = "Confirm_Checkout_btn"
-    confirm_checkout_btn.textContent = 'Confirm Key Checkout';
-    box2.appendChild(confirm_checkout_btn);
-
-
-    let emp_id = emp_dropdown.value; 
-    let key_id = key_dropdown.value; 
-    if (!emp_id || !key_id){
-        alert("Please check in a key or employee.");
-        return;  
-    }
-    check_out_btn.style.display = 'none';
-    emp_dropdown.value = ''; 
+    check_in_btn.hidden = true; 
+    check_out_btn.hidden = true;
+    emp_dropdown.disabled = true; 
 
     let check_out_time = new Date().toISOString();
     console.log(check_out_time)
@@ -450,7 +435,7 @@ check_out_btn.addEventListener('click', async function() {
             checked_out_mess_2.style.display = 'inline-block';
             checked_out_mess_2.innerHTML = `<p>${data.message}</p>`;
         }
-        KeyInfo(); 
+        // KeyInfo(); 
 
         setTimeout(resetPage, 3000); 
         }
@@ -458,6 +443,11 @@ check_out_btn.addEventListener('click', async function() {
             console.log(error);
         }
         
+});
+
+confirm_checkout_btn.addEventListener("click", async function (){
+
+    //dcdcwevcwvsidvnrwoivbwuviwbruowib
 });
 //--------------------------------------------------------------------------
 
