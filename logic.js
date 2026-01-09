@@ -445,10 +445,27 @@ check_out_btn.addEventListener('click', async function() {
         
 });
 
-confirm_checkout_btn.addEventListener("click", async function (){
+// check_out_btn.addEventListener("click", async function (){
 
-    //dcdcwevcwvsidvnrwoivbwuviwbruowib
-});
+//     let emp_id = emp_dropdown.value; 
+//     const result = await fetch('keys_for_the_employee', { method: "POST", 
+//             headers: {'Content-Type': 'application/json'}, 
+//             body: JSON.stringify({emp_id: emp_id})
+//     }); 
+
+//     const employees_keys = await result.json();
+//     if(!employees_keys.success){
+//         alert("Employees checked out keys retrieval was unsuccessful.");
+//         return; 
+//     }
+//     if(){
+
+//     }
+    
+    
+
+    
+// });
 //--------------------------------------------------------------------------
 
 
